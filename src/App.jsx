@@ -51,22 +51,6 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Close sidebar when clicking outside on mobile
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (showMobileSidebar && window.innerWidth < 768) {
-        const sidebar = document.querySelector('.sidebar');
-        const menuBtn = document.querySelector('.mobile-menu-btn');
-        if (sidebar && !sidebar.contains(e.target) && menuBtn && !menuBtn.contains(e.target)) {
-          setShowMobileSidebar(false);
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showMobileSidebar]);
-
   // Function to clean HTML response
   const cleanHtmlResponse = (text) => {
     if (!text) return '';
@@ -726,13 +710,21 @@ function App() {
 
           <div className="sidebar-section">
             <h3>📚 Quick Questions</h3>
-            <QuickQuestions 
-              questions={quickQuestions} 
-              onQuestionClick={(question) => {
-                handleQuickQuestion(question);
-                setShowMobileSidebar(false);
-              }} 
-            />
+            <div className="quick-questions">
+              {quickQuestions.map((question, index) => (
+                <button
+                  key={index}
+                  className="quick-question-btn"
+                  onClick={() => {
+                    handleQuickQuestion(question);
+                    setShowMobileSidebar(false);
+                  }}
+                  aria-label={`Ask: ${question}`}
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="sidebar-section">
