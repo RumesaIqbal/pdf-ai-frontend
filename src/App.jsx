@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { Send, User, Bot, Sparkles, RefreshCw, Plus, Trash2, MessageSquare, Upload, FileText, X, AlertCircle } from 'lucide-react';
+import { Send, User, Bot, Sparkles, RefreshCw, Plus, Trash2, MessageSquare, Upload, FileText, X, AlertCircle, Menu, X as CloseIcon } from 'lucide-react';
 import ChatMessage from './components/ChatMessage';
 import QuickQuestions from './components/QuickQuestions';
 import TypingIndicator from './components/TypingIndicator';
@@ -20,6 +20,7 @@ function App() {
   const [fileInputKey, setFileInputKey] = useState(Date.now());
   const [pdfInfo, setPdfInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -37,6 +38,34 @@ function App() {
   useEffect(() => {
     scrollToBottom();
   }, [activeMessages]);
+
+  // Close mobile sidebar when switching to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setShowMobileSidebar(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showMobileSidebar && window.innerWidth < 768) {
+        const sidebar = document.querySelector('.sidebar');
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        if (sidebar && !sidebar.contains(e.target) && menuBtn && !menuBtn.contains(e.target)) {
+          setShowMobileSidebar(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMobileSidebar]);
 
   // Function to clean HTML response
   const cleanHtmlResponse = (text) => {
@@ -324,7 +353,6 @@ function App() {
     
     // Update PDF info for active chat
     if (chatToSwitch.sessionId) {
-      // In a real app, you might want to fetch PDF info from backend
       setPdfInfo({
         name: 'Uploaded PDF',
         uploadedAt: 'Previous session'
@@ -332,6 +360,9 @@ function App() {
     } else {
       setPdfInfo(null);
     }
+    
+    // Close mobile sidebar after selecting chat
+    setShowMobileSidebar(false);
   };
 
   const deleteChat = async (chatId, e) => {
@@ -582,35 +613,48 @@ function App() {
       <header className="header">
         <div className="header-content">
           <div className="logo">
+            {/* Mobile Menu Button */}
+            <button 
+              className="mobile-menu-btn"
+              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+              aria-label={showMobileSidebar ? "Close menu" : "Open menu"}
+            >
+              {showMobileSidebar ? <CloseIcon size={20} /> : <Menu size={20} />}
+            </button>
             <Sparkles className="logo-icon" />
-            <h1>PDF AI Assistant</h1>
-            {pdfInfo && (
-              <div className="pdf-info">
-                <FileText size={16} />
-                <span className="pdf-name">{pdfInfo.name}</span>
-                {pdfInfo.isUpdate && (
-                  <span className="update-badge">Updated</span>
-                )}
-              </div>
-            )}
+            <div className="logo-text">
+              <h1>PDF AI Assistant</h1>
+              {pdfInfo && (
+                <div className="pdf-info">
+                  <FileText size={14} />
+                  <span className="pdf-name" title={pdfInfo.name}>
+                    {pdfInfo.name}
+                  </span>
+                  {pdfInfo.isUpdate && (
+                    <span className="update-badge">Updated</span>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           <div className="header-controls">
             {hasUploadedPDF && (
               <button 
                 onClick={() => setShowUpdateModal(true)} 
                 className="update-pdf-btn"
+                aria-label="Update PDF"
               >
                 <Upload className="icon-sm" />
-                Update PDF
+                <span className="btn-text">Update PDF</span>
               </button>
             )}
-            <button onClick={createNewChat} className="new-chat-btn">
+            <button onClick={createNewChat} className="new-chat-btn" aria-label="New chat">
               <Plus className="icon-sm" />
-              New Chat
+              <span className="btn-text">New Chat</span>
             </button>
-            <button onClick={clearActiveChat} className="clear-btn">
+            <button onClick={clearActiveChat} className="clear-btn" aria-label="Clear chat">
               <RefreshCw className="icon-sm" />
-              Clear Chat
+              <span className="btn-text">Clear Chat</span>
             </button>
           </div>
         </div>
@@ -618,16 +662,28 @@ function App() {
 
       <div className="chat-container">
         {/* Sidebar with Multiple Chats */}
-        <aside className="sidebar">
+        <aside className={`sidebar ${showMobileSidebar ? 'mobile-open' : ''}`}>
           <div className="sidebar-header">
             <MessageSquare className="sidebar-icon" />
             <h3>Chat Sessions</h3>
             <button 
               className="upload-sidebar-btn"
-              onClick={() => setShowUploadModal(true)}
+              onClick={() => {
+                setShowUploadModal(true);
+                setShowMobileSidebar(false);
+              }}
               title="Upload PDF"
+              aria-label="Upload PDF"
             >
               <Upload size={16} />
+            </button>
+            {/* Mobile close button */}
+            <button 
+              className="mobile-sidebar-close"
+              onClick={() => setShowMobileSidebar(false)}
+              aria-label="Close sidebar"
+            >
+              <CloseIcon size={20} />
             </button>
           </div>
           
@@ -637,12 +693,16 @@ function App() {
                 key={chat.id}
                 className={`chat-item ${chat.isActive ? 'active' : ''}`}
                 onClick={() => switchChat(chat.id)}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => e.key === 'Enter' && switchChat(chat.id)}
+                aria-label={`Switch to ${chat.name}`}
               >
                 <div className="chat-item-content">
                   <div className="chat-header">
                     <span className="chat-name">{chat.name}</span>
                     {chat.sessionId && (
-                      <FileText size={12} className="pdf-indicator" />
+                      <FileText size={12} className="pdf-indicator" aria-label="PDF loaded" />
                     )}
                   </div>
                   <span className="chat-message-count">
@@ -655,6 +715,7 @@ function App() {
                     className="delete-chat-btn"
                     onClick={(e) => deleteChat(chat.id, e)}
                     title="Delete chat"
+                    aria-label={`Delete ${chat.name}`}
                   >
                     <Trash2 size={14} />
                   </button>
@@ -667,7 +728,10 @@ function App() {
             <h3>📚 Quick Questions</h3>
             <QuickQuestions 
               questions={quickQuestions} 
-              onQuestionClick={handleQuickQuestion} 
+              onQuestionClick={(question) => {
+                handleQuickQuestion(question);
+                setShowMobileSidebar(false);
+              }} 
             />
           </div>
 
@@ -683,7 +747,7 @@ function App() {
         </aside>
 
         {/* Main Chat Area */}
-        <main className="main-chat">
+        <main className={`main-chat ${showMobileSidebar ? 'sidebar-open' : ''}`}>
           <div className="messages-container">
             {activeMessages.length === 0 ? (
               <div className="welcome-message">
@@ -697,14 +761,16 @@ function App() {
                         <button 
                           className="quick-action-btn primary"
                           onClick={() => setShowUploadModal(true)}
+                          aria-label="Upload PDF"
                         >
                           <Upload size={16} /> Upload PDF
                         </button>
                         <button 
                           className="quick-action-btn"
                           onClick={createNewChat}
+                          aria-label="Start new chat"
                         >
-                          <Plus size={16} /> Start New Chat
+                          <Plus size={16} /> New Chat
                         </button>
                       </div>
                     </>
@@ -718,12 +784,14 @@ function App() {
                         <button 
                           className="quick-action-btn"
                           onClick={() => setShowUpdateModal(true)}
+                          aria-label="Update PDF"
                         >
                           <Upload size={16} /> Update PDF
                         </button>
                         <button 
                           className="quick-action-btn"
                           onClick={createNewChat}
+                          aria-label="Start new chat"
                         >
                           <Plus size={16} /> New Chat
                         </button>
@@ -762,12 +830,14 @@ function App() {
                 className="message-input"
                 rows="2"
                 disabled={isLoading || !hasUploadedPDF}
+                aria-label="Type your message"
               />
               <button
                 onClick={sendMessage}
                 disabled={!input.trim() || isLoading || !hasUploadedPDF}
                 className="send-button"
                 title={!hasUploadedPDF ? "Upload a PDF first" : "Send message"}
+                aria-label="Send message"
               >
                 <Send className="send-icon" />
               </button>
@@ -779,6 +849,7 @@ function App() {
                   • <button 
                     className="hint-link"
                     onClick={() => setShowUploadModal(true)}
+                    aria-label="Upload PDF"
                   >
                     Upload a PDF
                   </button> to start asking questions
