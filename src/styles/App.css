@@ -1,4 +1,4 @@
-/* Reset and Base Styles */
+/* Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -307,6 +307,31 @@ body {
   font-weight: 600;
   color: #4b5563;
   margin-bottom: 0.75rem;
+}
+
+/* Quick Questions */
+.quick-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quick-question-btn {
+  padding: 0.75rem;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #374151;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.quick-question-btn:hover {
+  background: #e5e7eb;
 }
 
 .tips-list {
@@ -1002,7 +1027,6 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  /* Mobile Menu Button */
   .mobile-menu-btn {
     display: flex;
     align-items: center;
@@ -1017,7 +1041,6 @@ body {
     font-size: 1.25rem;
   }
 
-  /* Header Controls */
   .header-controls {
     gap: 0.5rem;
   }
@@ -1034,13 +1057,11 @@ body {
     margin: 0;
   }
 
-  /* PDF Info */
   .pdf-info {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
   }
 
-  /* Sidebar for Mobile */
   .sidebar {
     position: fixed;
     left: -100%;
@@ -1060,7 +1081,6 @@ body {
     display: block;
   }
 
-  /* Main Chat */
   .main-chat {
     width: 100%;
   }
@@ -1076,7 +1096,6 @@ body {
     z-index: 999;
   }
 
-  /* Messages */
   .messages-container {
     padding: 1rem;
   }
@@ -1090,7 +1109,6 @@ body {
     font-size: 0.875rem;
   }
 
-  /* Welcome Message */
   .welcome-message {
     padding: 1.5rem;
   }
@@ -1113,7 +1131,6 @@ body {
     justify-content: center;
   }
 
-  /* Input Container */
   .input-container {
     padding: 1rem;
   }
@@ -1125,7 +1142,7 @@ body {
 
   .message-input {
     min-height: 60px;
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px;
   }
 
   .send-button {
@@ -1144,7 +1161,6 @@ body {
     margin: 0.5rem 0 0 0;
   }
 
-  /* Footer */
   .footer-content {
     flex-direction: column;
     gap: 0.75rem;
@@ -1164,7 +1180,6 @@ body {
     display: none;
   }
 
-  /* Modal */
   .modal-content {
     width: 95%;
     margin: 0.5rem;
@@ -1191,16 +1206,24 @@ body {
     width: 100%;
   }
 
-  /* Error Toast */
   .error-toast {
     left: 1rem;
     right: 1rem;
     max-width: none;
     top: 1rem;
   }
+
+  .quick-questions {
+    gap: 0.5rem;
+  }
+
+  .quick-question-btn {
+    padding: 0.875rem;
+    font-size: 0.875rem;
+    min-height: 44px;
+  }
 }
 
-/* Tablet Styles */
 @media (min-width: 769px) and (max-width: 1024px) {
   .sidebar {
     width: 250px;
@@ -1223,7 +1246,6 @@ body {
   }
 }
 
-/* Desktop Styles */
 @media (min-width: 1025px) {
   .sidebar {
     width: 300px;
@@ -1239,7 +1261,6 @@ body {
   }
 }
 
-/* Touch-friendly improvements */
 @media (hover: none) and (pointer: coarse) {
   .chat-item,
   .quick-action-btn,
@@ -1247,7 +1268,8 @@ body {
   .send-button,
   .delete-chat-btn,
   .remove-file-btn,
-  .header-controls button {
+  .header-controls button,
+  .quick-question-btn {
     min-height: 44px;
     min-width: 44px;
   }
@@ -1262,7 +1284,6 @@ body {
   }
 }
 
-/* Landscape mode for mobile */
 @media (max-width: 768px) and (orientation: landscape) {
   .header {
     padding: 0.75rem;
@@ -1286,254 +1307,13 @@ body {
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .app-container {
-    background: #111827;
-  }
-
-  .header,
-  .sidebar,
-  .main-chat,
-  .footer,
-  .modal-content {
-    background: #1f2937;
-    color: #f9fafb;
-  }
-
-  .logo h1 {
-    color: #f9fafb;
-  }
-
-  .pdf-info {
-    background: #0f172a;
-    border-color: #1e293b;
-  }
-
-  .pdf-name {
-    color: #60a5fa;
-  }
-
-  .update-badge {
-    background: #065f46;
-    color: #a7f3d0;
-  }
-
-  .chat-item {
-    color: #f9fafb;
-  }
-
-  .chat-item:hover {
-    background: #374151;
-  }
-
-  .chat-item.active {
-    background: #1e3a8a;
-  }
-
-  .chat-name {
-    color: #f9fafb;
-  }
-
-  .chat-message-count {
-    color: #d1d5db;
-  }
-
-  .tips-list li {
-    color: #d1d5db;
-  }
-
-  .sidebar-section h3 {
-    color: #e5e7eb;
-  }
-
-  .welcome-content h2 {
-    color: #f9fafb;
-  }
-
-  .welcome-content p {
-    color: #d1d5db;
-  }
-
-  .subtext {
-    color: #9ca3af !important;
-  }
-
-  .quick-action-btn {
-    background: #374151;
-    border-color: #4b5563;
-    color: #f9fafb;
-  }
-
-  .quick-action-btn.primary {
-    background: #7c3aed;
-    border-color: #7c3aed;
-  }
-
-  .message-content {
-    background: #374151;
-    color: #f9fafb;
-    border-color: #4b5563;
-  }
-
-  .message.user .message-content {
-    background: #1e40af;
-    border-color: #1e3a8a;
-  }
-
-  .message.system .message-content {
-    background: #0f172a;
-    border-color: #1e293b;
-    color: #60a5fa;
-  }
-
-  .input-container {
-    background: #1f2937;
-    border-color: #374151;
-  }
-
-  .message-input {
-    background: #374151;
-    border-color: #4b5563;
-    color: #f9fafb;
-  }
-
-  .message-input:focus {
-    border-color: #7c3aed;
-  }
-
-  .message-input:disabled {
-    background: #374151;
-    color: #9ca3af;
-  }
-
-  .input-hint {
-    color: #9ca3af;
-  }
-
-  .hint-link {
-    color: #60a5fa;
-  }
-
-  .tech-badge {
-    background: #374151;
-    color: #e5e7eb;
-  }
-
-  .upload-area {
-    background: #374151;
-    border-color: #4b5563;
-  }
-
-  .upload-area h3 {
-    color: #f9fafb;
-  }
-
-  .upload-area p {
-    color: #d1d5db;
-  }
-
-  .file-preview {
-    background: #374151;
-    border-color: #4b5563;
-  }
-
-  .file-name {
-    color: #f9fafb;
-  }
-
-  .modal-btn.secondary {
-    background: #374151;
-    color: #f9fafb;
-  }
-}
-
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-  .error-toast,
-  .modal-content,
-  .sidebar {
-    animation: none;
-    transition: none;
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .chat-item.active {
-    border: 2px solid #000;
-  }
-
-  .send-button:disabled {
-    opacity: 0.5;
-  }
-}
-
-/* Additional Mobile Optimizations */
-@media (max-width: 480px) {
-  .header h1 {
-    font-size: 1.1rem;
-  }
-
-  .logo-icon {
-    width: 18px;
-    height: 18px;
-  }
-
-  .header-controls button {
-    padding: 0.375rem;
-  }
-
-  .messages-container {
-    padding: 0.75rem;
-  }
-
-  .message {
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-  }
-
-  .message-content {
-    padding: 0.625rem;
-    font-size: 0.8125rem;
-  }
-
-  .input-hint {
-    font-size: 0.625rem;
-  }
-
-  .footer {
-    font-size: 0.75rem;
-  }
-
-  .tech-badge {
-    padding: 0.125rem 0.375rem;
-    font-size: 0.625rem;
-  }
-}
-
-/* Ensure modals are always centered and visible */
-.modal-overlay {
-  align-items: flex-start;
-  padding-top: 2rem;
-}
-
-@media (max-width: 768px) {
-  .modal-overlay {
-    align-items: center;
-    padding: 1rem;
-  }
-}
-
 /* Improve scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -1543,44 +1323,4 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
-}
-
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-track {
-    background: #374151;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #4b5563;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-  }
-}
-
-/* Print styles */
-@media print {
-  .header,
-  .sidebar,
-  .input-container,
-  .footer,
-  .error-toast,
-  .modal-overlay {
-    display: none;
-  }
-
-  .app-container {
-    background: white;
-  }
-
-  .messages-container {
-    padding: 0;
-    overflow: visible;
-  }
-
-  .message-content {
-    box-shadow: none;
-    border: 1px solid #ddd;
-  }
 }
