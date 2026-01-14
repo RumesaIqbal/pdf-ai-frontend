@@ -651,13 +651,7 @@ function App() {
             <MessageSquare className="sidebar-icon" />
             <h3>Chat Sessions</h3>
             {/* Mobile close button */}
-            <button 
-              className="mobile-sidebar-close"
-              onClick={() => setShowMobileSidebar(false)}
-              aria-label="Close sidebar"
-            >
-              <CloseIcon size={20} />
-            </button>
+         
           </div>
           
           <div className="chats-list">
