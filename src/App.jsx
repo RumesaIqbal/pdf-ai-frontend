@@ -650,17 +650,6 @@ function App() {
           <div className="sidebar-header">
             <MessageSquare className="sidebar-icon" />
             <h3>Chat Sessions</h3>
-            <button 
-              className="upload-sidebar-btn"
-              onClick={() => {
-                setShowUploadModal(true);
-                setShowMobileSidebar(false);
-              }}
-              title="Upload PDF"
-              aria-label="Upload PDF"
-            >
-              <Upload size={16} />
-            </button>
             {/* Mobile close button */}
             <button 
               className="mobile-sidebar-close"
